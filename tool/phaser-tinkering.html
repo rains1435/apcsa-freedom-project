@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/phaser@v4.2.1/dist/phaser.min.js"></script>
+        <!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
+        <style>
+            /* CSS */
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: green;
+            }
+            #game-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+        
+        <title>Title</title>
+    </head>
+    <body>
+        <!-- HTML -->
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- <script src="script.js"></script> -->
+        <script>
+            // JS
+            var config = {
+                type: Phaser.AUTO,
+                scale: {
+                    mode: Phaser.Scale.FIT,
+                    parent: 'game-container',
+                    width: 1000,
+                    height: 600,
+                },
+                physics: { 
+                    default: 'arcade', 
+                    arcade: { gravity: { y: 900 }, debug: true } 
+                },
+                scene: {
+                    preload: preload,
+                    create: create,
+                    update: update
+                }
+            };
+
+            const game = new Phaser.Game(config);
+
+            function preload ()
+            {
+                this.load.image('sky', 'assets/sky.png');
+            }
+
+            function create () {
+                let sky = this.add.image(500, 300, 'sky');
+                sky.setDisplaySize(1000, 600);
+                
+                // the ball physics
+                ball = this.add.rectangle(400, 100, 30, 30, 0xffffff);
+                this.physics.add.existing(ball);
+                ball.body.setBounce(0.7).setCollideWorldBounds(true); 
+                ball.body.setGravityY(-600); // lower gravity than player (floatier and slower drop) 900 - 600 = 300 downward
+                
+                // the player physics (feels full effect of gravity of 900 downward)
+                player = this.add.rectangle(300, 100, 40, 40, 0xff4444);
+                this.physics.add.existing(player);
+                player.body.setCollideWorldBounds(true);
+            }
+            
+            function update () {
+
+                if (player.body.onFloor()) {
+                    player.body.setVelocityY(-500); // hops up at velocity 500 each time the player touches the floor
+                }
+
+            }
+            
+        </script>
+    </body>
+</html>
