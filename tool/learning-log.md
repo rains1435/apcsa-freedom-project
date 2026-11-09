@@ -46,9 +46,74 @@ if (player.body.onFloor()) {
 
 https://github.com/user-attachments/assets/f1c6d953-1fd2-4e1b-b9a3-11f3b99efa58
 
-### X/X/XX:
-* Text
+---
 
+### 11/8/26:
+* Today I am going to be doing something I've done last year using phaser but adding a new addition... I am going to show you **MOVEMENT and the addition of charging (holding down a key) vs single click (just pressed)**
+* Sources:
+  * [KeyboardPlugin](https://docs.phaser.io/api-documentation/class/input-keyboard-keyboardplugin) | [Key](https://docs.phaser.io/api-documentation/class/input-keyboard-key) | [Phaser.Input.Keyboard](https://docs.phaser.io/api-documentation/namespace/input-keyboard) | [Input.Keyboard.Events](https://docs.phaser.io/api-documentation/event/input-keyboard-events) | [Phaser.Input.Keyboard.KeyCodes](https://docs.phaser.io/api-documentation/namespace/input-keyboard-keycodes)
+
+* Since this game is two-player, we will give the two players different keys they'll use
+  * Player 1 will use W,A,S,D and Left Shift
+  * Player 2 will use arrow keys and right slash (/)
+
+* **Holding down** is best for moving horizontally (walking using A or D / left or right arrow) and also it is good for **CHARGING**
+  * **Charging:** this will be used on the "s" key and the "down arrow key" as they will be the bumping action in the volleyball game (held long enough before ball contacts, the bump will have more power... otherwise a short hold time will just bump the ball upwards and a bit forward)
+
+* **Single click** is best for jumping (using W or up arrow key) and diving (Shift or "/")
+  * Jumping only works when the key for it is pressed and they are on the ground (**body.onFloor()**)
+  * Diving, for today, will be tested on whether it works or not (a dive test via printing into console log)
+
+**TINKERING TIME!!!**
+
+``` js
+// in create()
+this.p1 = this.input.keyboard.addKeys('W,A,S,D'); // Player 1's keys
+this.p1dive = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT); // Player 1's dive key
+this.p2 = this.input.keyboard.createCursorKeys(); // Player 2's arrow keys
+this.p2dive = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FORWARD_SLASH); // Player 2's dive key (/)
+
+---
+
+// in update()
+const body = player.body; 
+
+// player one's horizontal movement
+if (this.p1.A.isDown) {
+    body.setVelocityX(-250); // A held = move left
+} else if (this.p1.D.isDown) {
+    body.setVelocityX(250); // D held = move right
+} else {
+    body.setVelocityX(0); // otherwise, don't move
+}
+// player one's jumping movement
+if (Phaser.Input.Keyboard.JustDown(this.p1.W) && body.onFloor()) {
+    body.setVelocityY(-500);   // W just pressed AND player is on the ground = jump up
+}
+// player one's charging (TESTING in console log)
+if (this.p1.S.isDown) {
+    console.log('charging', this.p1.S.getDuration(), 'ms');
+} 
+if (Phaser.Input.Keyboard.JustUp(this.p1.S)) {
+    console.log('released after', this.p1.S.duration, 'ms');
+}
+
+// BOTH players' diving (TESTING in console log)
+if (Phaser.Input.Keyboard.JustDown(this.p1dive)) {
+    console.log('Player 1 dive key pressed');
+} 
+if (Phaser.Input.Keyboard.JustDown(this.p2dive)) {
+    console.log('Player 2 dive key pressed');
+}
+```
+
+**RESULT:**
+
+https://github.com/user-attachments/assets/ee0b8b02-ee1c-4796-8e8b-c256c5b2610b
+
+---
+
+### XX/X/XX:
 
 <!-- 
 * Links you used today (websites, videos, etc)

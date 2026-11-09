@@ -79,14 +79,43 @@
                 player = this.add.rectangle(300, 100, 40, 40, 0xff4444);
                 this.physics.add.existing(player);
                 player.body.setCollideWorldBounds(true);
+
+                this.p1 = this.input.keyboard.addKeys('W,A,S,D'); // Player 1's keys
+                this.p1dive = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT); // Player 1's dive key
+                this.p2 = this.input.keyboard.createCursorKeys(); // Player 2's arrow keys
+                this.p2dive = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FORWARD_SLASH);  // Player 2's dive key (/)
             }
             
             function update () {
+                const body = player.body; 
 
-                if (player.body.onFloor()) {
-                    player.body.setVelocityY(-500); // hops up at velocity 500 each time the player touches the floor
+                // player one's horizontal movement
+                if (this.p1.A.isDown) {
+                    body.setVelocityX(-250); // A held = move left
+                } else if (this.p1.D.isDown) {
+                    body.setVelocityX(250); // D held = move right
+                } else {
+                    body.setVelocityX(0); // otherwise, don't move
+                }
+                // player one's jumping movement
+                if (Phaser.Input.Keyboard.JustDown(this.p1.W) && body.onFloor()) {
+                    body.setVelocityY(-500);   // W just pressed AND player is on the ground = jump up
+                }
+                // player one's charging (TESTING in console log)
+                if (this.p1.S.isDown) {
+                    console.log('charging', this.p1.S.getDuration(), 'ms');
+                } 
+                if (Phaser.Input.Keyboard.JustUp(this.p1.S)) {
+                    console.log('released after', this.p1.S.duration, 'ms');
                 }
 
+                // BOTH players' diving (TESTING in console log)
+                if (Phaser.Input.Keyboard.JustDown(this.p1dive)) {
+                    console.log('Player 1 dive key pressed');
+                } 
+                if (Phaser.Input.Keyboard.JustDown(this.p2dive)) {
+                    console.log('Player 2 dive key pressed');
+                } 
             }
             
         </script>
