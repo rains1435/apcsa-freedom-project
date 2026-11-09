@@ -91,8 +91,9 @@ if (Phaser.Input.Keyboard.JustDown(this.p1.W) && body.onFloor()) {
     body.setVelocityY(-500);   // W just pressed AND player is on the ground = jump up
 }
 // player one's charging (TESTING in console log)
+// how long the key is held down for (important to know because later on, time will be used for power charging)
 if (this.p1.S.isDown) {
-    console.log('charging', this.p1.S.getDuration(), 'ms');
+    console.log('charging', this.p1.S.getDuration(), 'ms'); 
 } 
 if (Phaser.Input.Keyboard.JustUp(this.p1.S)) {
     console.log('released after', this.p1.S.duration, 'ms');
