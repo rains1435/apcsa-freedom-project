@@ -114,7 +114,74 @@ https://github.com/user-attachments/assets/ee0b8b02-ee1c-4796-8e8b-c256c5b2610b
 
 ---
 
-### XX/X/XX:
+### 11/22/26:
+- In volleyball, we need the ball to be able to be interacted with and mainly with the players, net, and the floor... so we're going to learn about **how things touch!**
+- Sources:
+  - [Arcade Physics](https://docs.phaser.io/phaser/concepts/physics/arcade) | [Arcade Factory](https://docs.phaser.io/api-documentation/class/physics-arcade-factory) | [Arcade Components](https://docs.phaser.io/api-documentation/namespace/physics-arcade-components) | [Math Distance](https://docs.phaser.io/api-documentation/namespace/math-distance)
+- Today's lesson:
+  - Collider vs Overlap
+    - Collider = when two objects interact, they get pushed away from each other (can be used for ball and net interaction)
+    - Overlap = when two objects interact, they dont get pushed away from each other (it's like a sensor)
+  - Callback = "call me back when this or that happens" or in other words, Phaser automatically runs when two object touches and it receives information that they touched
+  - Static = SOME things that never move
+    - A **Static Object** (such as the net or the floor) isn't pushed around and doesn't fall like ball would. It can still bump into other things and make things bounce but it doesn't move.
+    - An important thing to remember is that a static object's invisible hitbox doesn't automatically change to fit the picture of the object if the picture is resized. Thus you'll need to use `refreshBody()` -> for example: `floor.refreshBody();`
+  - The net is going to be a static, thin, collidable rectangle
+  - Player's hitbox for the ball
+    - This will be a distance related thing. When the player releases their key for bumps and hits, the game will ask if the player is in reach of the ball.
+      - Distance: the distance between the player's center and the ball's center. If the player's reach is smaller than the set distance, then it counts as a hit or bump
+      - Circle scanner: place an invisible 'reach' zone around the player and ask Phaser which objects are touching the circle. Even if the ball grazes the the edge of that zone, phaser will count it as hit and include it in their list
+
+**TINKERING TIME!!!**
+
+``` js 
+// in create()
+
+// net
+net = this.add.rectangle(400, 600, 10, 175, 0xffffff); // a thin white tall rectangle net
+this.physics.add.existing(net, true); // give it physics; "true" means static (never moves)
+this.physics.add.collider(ball, net); // ball bounces off the net
+this.physics.add.collider(player, net); // the player can't walk through the net
+
+// checking for ball-player overlapping
+this.physics.add.overlap(ball, player, contactCheck); // creates the relationship
+
+function contactCheck() {
+    console.log("ball is touching the player"); // prints message when relationship is true
+}
+
+// in update()
+
+// distance based checking system for whether player reaches ball or not
+if (Phaser.Input.Keyboard.JustUp(this.p1.S)) {
+    const dist = Phaser.Math.Distance.Between(player.x, player.y, ball.x, ball.y);
+
+    if (dist < 80) { 
+        console.log("HIT", dist); // only prints when the distance is less than 80 between the player and ball
+    } else {
+        console.log("miss", dist); // otherwise, 80 or more, prints miss
+    }
+}
+
+// circle hitbox based checking system for whether player reaches ball or not
+if (Phaser.Input.Keyboard.JustUp(this.p1.S)) {
+    const nearby = this.physics.overlapCirc(player.x, player.y, 40); // the invisible circle hitbox on the player (40 is the radius of the circle)
+
+    if (nearby.includes(ball.body)) {
+        console.log("HIT (for circle check)"); // when 'S' key is released, circle will be drawn around the player to check whether the ball is in the circle's radius or even grazing the circle's edges. If yes, prints message as shown.
+    } else {
+        console.log("MISS (for circle check)"); // otherwise, not in the circle's radius, prints message as shown
+    }
+}
+```
+
+**RESULT:**
+
+https://github.com/user-attachments/assets/4853ac6d-73f6-4ba7-916f-2d0e798b0bca
+
+---
+
+### X/X/XX
 
 <!-- 
 * Links you used today (websites, videos, etc)
